@@ -1,0 +1,16 @@
+function stats {
+	units=(nginx php-fpm7 php7.3-fpm php7.4-fpm mariadb)
+	for a in "${units[@]}"
+	do 
+		res=$(systemctl status $a 2>/dev/null)
+		if [ "$res" = "" ]; then
+			continue
+		fi
+		
+		echo "Check $a unit:"
+		echo $res | grep -o 'CPU: [0-9\.]\+\?m\?s' | sed 's/\s/\t\t/'
+		echo $res | grep -o 'Memory: [0-9\.]\+\?M' | sed 's/\s/\t\t/'
+		echo "------------------------------------"
+	done
+}
+stats
